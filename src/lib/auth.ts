@@ -23,6 +23,9 @@ const providers: NextAuthOptions["providers"] = [
       if (!user || !user.passwordHash) {
         throw new Error("Tài khoản không tồn tại");
       }
+      if (user.isBanned) {
+        throw new Error(`Tài khoản đã bị khóa. Lý do: ${user.banReason || "Vi phạm quy tắc"}`);
+      }
       const isCorrectPassword = await bcrypt.compare(credentials.password, user.passwordHash);
       if (!isCorrectPassword) {
         throw new Error("Mật khẩu không đúng");
@@ -57,6 +60,16 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
+        // Check if user is banned
+        try {
+          const user = await prismadb.user.findUnique({ where: { id: token.id as string } });
+          if (user?.isBanned) {
+            (session.user as any).isBanned = true;
+            (session.user as any).banReason = user.banReason;
+          } else {
+            (session.user as any).isBanned = false;
+          }
+        } catch {}
       }
       return session;
     },
