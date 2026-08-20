@@ -7,6 +7,9 @@ import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+// Force dynamic rendering for all pages — avoids prerender issues with auth/supabase
+export const dynamic = "force-dynamic";
+
 const inter = Inter({ subsets: ["latin", "vietnamese"] });
 
 export const metadata: Metadata = {
