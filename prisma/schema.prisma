@@ -10,26 +10,26 @@ datasource db {
 // ─── Users ────────────────────────────────────────────────
 
 model User {
-  id           String    @id @default(cuid())
-  username     String    @unique
-  email        String    @unique
-  emailVerified DateTime?
-  passwordHash String?
-  avatarUrl    String?
-  reputation   Int       @default(0)
-  role         UserRole  @default(USER)
-  isBanned     Boolean   @default(false)
-  banReason    String?
-  bannedAt     DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  username      String    @unique
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  passwordHash  String?   @map("password_hash")
+  avatarUrl     String?   @map("avatar_url")
+  reputation    Int       @default(0)
+  role          UserRole  @default(USER)
+  isBanned      Boolean   @default(false) @map("is_banned")
+  banReason     String?   @map("ban_reason")
+  bannedAt      DateTime? @map("banned_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  projects     Project[]
-  comments     Comment[]
-  upvotes      Upvote[]
-  badges       UserBadge[]
-  sessions     Session[]
-  accounts     Account[]
+  projects  Project[]
+  comments  Comment[]
+  upvotes   Upvote[]
+  badges    UserBadge[]
+  sessions  Session[]
+  accounts  Account[]
 
   @@map("users")
 }
@@ -44,17 +44,17 @@ enum UserRole {
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String
+  userId            String  @map("user_id")
   type              String
   provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text @map("refresh_token")
+  access_token      String? @db.Text @map("access_token")
+  expires_at        Int?    @map("expires_at")
+  token_type        String? @map("token_type")
   scope             String?
-  id_token          String? @db.Text
-  session_state     String?
+  id_token          String? @db.Text @map("id_token")
+  session_state     String? @map("session_state")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -64,8 +64,8 @@ model Account {
 
 model Session {
   id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -84,29 +84,29 @@ model VerificationToken {
 // ─── Projects (Code Submissions) ─────────────────────────
 
 model Project {
-  id                  String   @id @default(cuid())
-  userId              String
+  id                  String        @id @default(cuid())
+  userId              String        @map("user_id")
   title               String
-  slug                String   @unique
-  description         String   @db.Text
-  code                String   @db.Text
-  boardType           BoardType
+  slug                String        @unique
+  description         String        @db.Text
+  code                String        @db.Text
+  boardType           BoardType     @map("board_type")
   difficulty          Difficulty
-  hardwareRequirements String  @db.Text
-  usageGuide          String   @db.Text
-  wiringDiagramUrl    String?
+  hardwareRequirements String       @db.Text @map("hardware_requirements")
+  usageGuide          String        @db.Text @map("usage_guide")
+  wiringDiagramUrl    String?       @map("wiring_diagram_url")
   status              ProjectStatus @default(PENDING)
-  upvotes             Int      @default(0)
-  viewCount           Int      @default(0)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  upvotes             Int           @default(0)
+  viewCount           Int           @default(0) @map("view_count")
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @updatedAt @map("updated_at")
 
-  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags                ProjectTag[]
-  errors              ProjectError[]
-  comments            Comment[]
-  versions            ProjectVersion[]
-  upvotesList         Upvote[]
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags        ProjectTag[]
+  errors      ProjectError[]
+  comments    Comment[]
+  versions    ProjectVersion[]
+  upvotesList Upvote[]
 
   @@index([userId])
   @@index([status])
@@ -143,13 +143,13 @@ enum ProjectStatus {
 
 model ProjectError {
   id           String   @id @default(cuid())
-  projectId    String
-  errorMessage String   @db.Text
+  projectId    String   @map("project_id")
+  errorMessage String   @db.Text @map("error_message")
   cause        String   @db.Text
   fix          String   @db.Text
-  codeSnippet  String?  @db.Text
+  codeSnippet  String?  @db.Text @map("code_snippet")
   upvotes      Int      @default(0)
-  createdAt    DateTime @default(now())
+  createdAt    DateTime @default(now()) @map("created_at")
 
   project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   upvotesList Upvote[]
@@ -162,17 +162,17 @@ model ProjectError {
 // ─── Tags ────────────────────────────────────────────────
 
 model Tag {
-  id        String       @id @default(cuid())
-  name      String       @unique
-  category  TagCategory
-  projects  ProjectTag[]
+  id       String      @id @default(cuid())
+  name     String      @unique
+  category TagCategory
+  projects ProjectTag[]
 
   @@map("tags")
 }
 
 model ProjectTag {
-  projectId String
-  tagId     String
+  projectId String  @map("project_id")
+  tagId     String  @map("tag_id")
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
@@ -197,11 +197,11 @@ enum TagCategory {
 
 model Comment {
   id        String   @id @default(cuid())
-  projectId String
-  userId    String
+  projectId String   @map("project_id")
+  userId    String   @map("user_id")
   content   String   @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -214,11 +214,11 @@ model Comment {
 // ─── Project Versions ────────────────────────────────────
 
 model ProjectVersion {
-  id        String   @id @default(cuid())
-  projectId String
-  code      String   @db.Text
-  changelog String?  @db.Text
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  projectId String    @map("project_id")
+  code      String    @db.Text
+  changelog String?   @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
@@ -229,11 +229,11 @@ model ProjectVersion {
 // ─── Upvotes ─────────────────────────────────────────────
 
 model Upvote {
-  id           String   @id @default(cuid())
-  userId       String
-  projectId    String?
-  errorId      String?
-  createdAt    DateTime @default(now())
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  projectId String?   @map("project_id")
+  errorId   String?   @map("error_id")
+  createdAt DateTime  @default(now()) @map("created_at")
 
   user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   project Project?      @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -258,10 +258,10 @@ model Badge {
 }
 
 model UserBadge {
-  id        String   @id @default(cuid())
-  userId    String
-  badgeId   String
-  earnedAt  DateTime @default(now())
+  id       String   @id @default(cuid())
+  userId   String   @map("user_id")
+  badgeId  String   @map("badge_id")
+  earnedAt DateTime @default(now()) @map("earned_at")
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
@@ -273,13 +273,13 @@ model UserBadge {
 // ─── Reports ─────────────────────────────────────────────
 
 model Report {
-  id           String   @id @default(cuid())
-  reporterId   String
-  projectId    String?
-  commentId    String?
-  reason       String   @db.Text
-  status       ReportStatus @default(PENDING)
-  createdAt    DateTime @default(now())
+  id         String       @id @default(cuid())
+  reporterId String       @map("reporter_id")
+  projectId  String?      @map("project_id")
+  commentId  String?      @map("comment_id")
+  reason     String       @db.Text
+  status     ReportStatus @default(PENDING)
+  createdAt  DateTime     @default(now()) @map("created_at")
 
   @@index([status])
   @@map("reports")
