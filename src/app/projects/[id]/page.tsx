@@ -29,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { toast } from "@/components/ui/use-toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArduinoCodeBlock } from "@/components/ui/arduino-code-block";
 
 interface ProjectData {
   id: string;
@@ -49,21 +50,6 @@ interface ProjectData {
   comments: { id: string; content: string; createdAt: string; user: { id: string; username: string; avatarUrl: string | null } }[];
   versions: { id: string; changelog: string | null; createdAt: string }[];
   _count: { upvotesList: number; comments: number };
-}
-
-function highlightCode(code: string) {
-  return code
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/(\/\/.*$)/gm, '<span class="text-slate-500 italic">$1</span>')
-    .replace(/(#include\s*<[^>]+>)/g, '<span class="text-rose-400">$1</span>')
-    .replace(/(#define\s+\w+)/g, '<span class="text-purple-400 font-semibold">$1</span>')
-    .replace(/\b(void|int|float|char|bool|String|unsigned long|static)\b/g, '<span class="text-purple-400">$1</span>')
-    .replace(/\b(setup|loop|Serial\.begin|Serial\.println|Serial\.print|analogRead|digitalRead|pinMode|delay|millis|isnan)\b/g, '<span class="text-sky-400">$1</span>')
-    .replace(/\b(if|else|return|for|while)\b/g, '<span class="text-pink-400 font-semibold">$1</span>')
-    .replace(/(".*?")/g, '<span class="text-emerald-400">$1</span>')
-    .replace(/\b(\d+\.?\d*)\b/g, '<span class="text-amber-400">$1</span>');
 }
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
@@ -233,9 +219,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               </div>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded-lg bg-[hsl(240,10%,5.5%)] border border-border p-4 text-sm">
-                <code className="font-mono text-slate-300" dangerouslySetInnerHTML={{ __html: highlightCode(project.code) }} />
-              </pre>
+              <ArduinoCodeBlock code={project.code} />
             </CardContent>
           </Card>
 
