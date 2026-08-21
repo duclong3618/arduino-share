@@ -168,13 +168,13 @@ export default function HomePage() {
 &nbsp;&nbsp;<span className="text-[#e5c07b]">Serial</span>.<span className="text-[#61afef]">begin</span>(<span className="text-[#d19a66]">9600</span>);<br/>
 &nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">init</span>();<br/>
 &nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">backlight</span>();<br/>
-&nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">print</span>(<span className="text-[#98c379]">"System Ready..."</span>);<br/>
+&nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">print</span>(<span className="text-[#98c379]">&quot;System Ready...&quot;</span>);<br/>
 &#125;<br/>
 <br/>
 <span className="text-[#c678dd]">void</span> <span className="text-[#61afef]">loop</span>() &#123;<br/>
 &nbsp;&nbsp;<span className="text-[#c678dd]">int</span> <span className="text-[#e06c75]">val</span> = <span className="text-[#56b6c2]">analogRead</span>(<span className="text-[#e06c75]">sensorPin</span>);<br/>
 &nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">setCursor</span>(<span className="text-[#d19a66]">0</span>, <span className="text-[#d19a66]">1</span>);<br/>
-&nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">print</span>(<span className="text-[#98c379]">"Val: "</span>);<br/>
+&nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">print</span>(<span className="text-[#98c379]">&quot;Val: &quot;</span>);<br/>
 &nbsp;&nbsp;<span className="text-[#e06c75]">lcd</span>.<span className="text-[#61afef]">print</span>(<span className="text-[#e06c75]">val</span>);<br/>
 &nbsp;&nbsp;<span className="text-[#56b6c2]">delay</span>(<span className="text-[#d19a66]">100</span>);<br/>
 &#125;

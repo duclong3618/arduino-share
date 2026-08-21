@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { Mail, Lock, User, Loader2, Eye, EyeOff, Code2, Rocket } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/use-toast";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -13,11 +18,6 @@ function GithubIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "@/components/ui/use-toast";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -88,7 +88,7 @@ export default function RegisterPage() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              "Gia nhập cộng đồng để cùng xây dựng các dự án IoT tuyệt vời, đóng góp mã nguồn và giúp đỡ hàng ngàn lập trình viên khác."
+              &quot;Gia nhập cộng đồng để cùng xây dựng các dự án IoT tuyệt vời, đóng góp mã nguồn và giúp đỡ hàng ngàn lập trình viên khác.&quot;
             </p>
             <footer className="text-sm">Bắt đầu hành trình của bạn</footer>
           </blockquote>

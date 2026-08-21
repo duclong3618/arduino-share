@@ -5,6 +5,11 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Mail, Lock, Loader2, Eye, EyeOff, Code2, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/use-toast";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -13,11 +18,6 @@ function GithubIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "@/components/ui/use-toast";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -67,7 +67,7 @@ export default function LoginPage() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              "Thư viện mã nguồn mở và chia sẻ giải pháp Arduino lớn nhất dành cho lập trình viên IoT tại Việt Nam."
+              &quot;Thư viện mã nguồn mở và chia sẻ giải pháp Arduino lớn nhất dành cho lập trình viên IoT tại Việt Nam.&quot;
             </p>
             <footer className="text-sm">Tham gia cộng đồng ngay hôm nay</footer>
           </blockquote>
