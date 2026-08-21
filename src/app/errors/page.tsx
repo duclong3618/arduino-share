@@ -92,41 +92,49 @@ export default function ErrorsPage() {
       ) : errors.length > 0 ? (
         <div className="space-y-4">
           {errors.map((error) => (
-            <Card key={error.id} className="border-error-border bg-error-card">
-              <CardContent className="pt-6 space-y-4">
+            <Card key={error.id} className="border-border bg-card hover:border-red-500/30 hover:shadow-md transition-all duration-300 group">
+              <CardContent className="pt-5 space-y-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge variant="destructive" className="text-xs"><Bug className="mr-1 h-3 w-3" />Lỗi</Badge>
-                      <span className="text-xs text-muted-foreground">{error.upvotes} xác nhận</span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="destructive" className="text-xs bg-red-500/10 text-red-500 hover:bg-red-500/20 border-transparent"><Bug className="mr-1 h-3 w-3" />Lỗi</Badge>
+                      <span className="text-xs text-muted-foreground font-medium"><Star className="inline mr-1 h-3 w-3 text-amber-500" />{error.upvotes} xác nhận</span>
                     </div>
-                    <code className="block text-sm font-mono text-red-400 break-all leading-relaxed">{error.errorMessage}</code>
+                    <code className="block text-sm font-mono text-red-500 break-all leading-tight bg-red-500/10 p-2.5 rounded-md border border-red-500/20 w-full group-hover:bg-red-500/15 transition-colors">
+                      {error.errorMessage}
+                    </code>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wider">Nguyên nhân</p>
-                  <p className="text-sm">{error.cause}</p>
+                  <p className="text-xs font-medium text-amber-500 mb-1 flex items-center gap-1.5 uppercase tracking-wider">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Nguyên nhân
+                  </p>
+                  <p className="text-sm text-muted-foreground">{error.cause}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-emerald-400 mb-1 uppercase tracking-wider">Cách sửa</p>
-                  <p className="text-sm whitespace-pre-line">{error.fix}</p>
+                  <p className="text-xs font-medium text-emerald-500 mb-1 flex items-center gap-1.5 uppercase tracking-wider">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Cách sửa
+                  </p>
+                  <p className="text-sm text-muted-foreground whitespace-pre-line">{error.fix}</p>
                 </div>
                 {error.codeSnippet && (
-                  <div className="relative">
+                  <div className="relative mt-2">
                     <div className="flex items-center justify-between mb-1">
                       <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Code ví dụ</p>
-                      <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => handleCopySnippet(error.codeSnippet!, error.id)}>
-                        {copiedId === error.id ? <Check className="mr-1 h-3 w-3" /> : <Copy className="mr-1 h-3 w-3" />}
+                      <Button variant="ghost" size="sm" className="h-6 text-xs hover:bg-accent" onClick={() => handleCopySnippet(error.codeSnippet!, error.id)}>
+                        {copiedId === error.id ? <Check className="mr-1 h-3 w-3 text-green-500" /> : <Copy className="mr-1 h-3 w-3" />}
                         Copy
                       </Button>
                     </div>
-                    <pre className="overflow-x-auto rounded-lg bg-background/50 border border-border p-3 text-xs font-mono">{error.codeSnippet}</pre>
+                    <pre className="overflow-x-auto rounded-lg bg-[#1e1e1e] border border-border p-3 text-xs font-mono text-gray-300 shadow-sm">{error.codeSnippet}</pre>
                   </div>
                 )}
-                <div className="flex items-center justify-between pt-2 border-t border-error-border/50">
-                  <Link href={`/projects/${error.project.id}`} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                    <ExternalLink className="h-3 w-3" />
-                    Từ dự án: {error.project.title}
+                <div className="flex items-center justify-between pt-3 border-t border-border mt-4">
+                  <Link href={`/projects/${error.project.id}#error-${error.id}`} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors group/link">
+                    <ExternalLink className="h-3 w-3 group-hover/link:text-arduino-teal" />
+                    Từ dự án: <span className="font-medium">{error.project.title}</span>
                   </Link>
                 </div>
               </CardContent>

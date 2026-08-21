@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Loader2, Eye, EyeOff, Code2, Zap } from "lucide-react";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -16,7 +16,6 @@ function GithubIcon({ className }: { className?: string }) {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 
@@ -57,83 +56,101 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container mx-auto flex min-h-[70vh] items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Đăng nhập</CardTitle>
-          <CardDescription>Chào mừng bạn đến với ArduinoHub</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* GitHub OAuth */}
-          <Button variant="outline" className="w-full" onClick={handleGitHubLogin}>
-            <GithubIcon className="mr-2 h-4 w-4" />
-            Đăng nhập với GitHub
-          </Button>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">hoặc</span>
-            </div>
+    <div className="container relative flex h-[85vh] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        <div className="absolute inset-0 bg-arduino-teal" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent mix-blend-multiply" />
+        <div className="relative z-20 flex items-center text-lg font-medium">
+          <Code2 className="mr-2 h-6 w-6" />
+          ArduinoHub
+        </div>
+        <div className="relative z-20 mt-auto">
+          <blockquote className="space-y-2">
+            <p className="text-lg">
+              "Thư viện mã nguồn mở và chia sẻ giải pháp Arduino lớn nhất dành cho lập trình viên IoT tại Việt Nam."
+            </p>
+            <footer className="text-sm">Tham gia cộng đồng ngay hôm nay</footer>
+          </blockquote>
+        </div>
+      </div>
+      <div className="lg:p-8 w-full max-w-md mx-auto">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+          <div className="flex flex-col space-y-2 text-center">
+            <Zap className="mx-auto h-10 w-10 text-arduino-teal" />
+            <h1 className="text-2xl font-semibold tracking-tight">Đăng nhập</h1>
+            <p className="text-sm text-muted-foreground">
+              Nhập email và mật khẩu để tiếp tục
+            </p>
           </div>
 
-          {/* Email/Password */}
-          <form onSubmit={handleCredentialsLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="email@example.com"
-                  className="pl-9"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+          <div className="grid gap-6">
+            <form onSubmit={handleCredentialsLogin}>
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="email@example.com"
+                      className="pl-9 bg-background/50"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Mật khẩu</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      className="pl-9 pr-9 bg-background/50"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+                <Button disabled={loading} className="w-full bg-arduino-teal hover:bg-arduino-teal/90">
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Đăng nhập
+                </Button>
+              </div>
+            </form>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Hoặc tiếp tục với</span>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Mật khẩu</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  className="pl-9 pr-9"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-muted-foreground"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
-              Đăng nhập
+            <Button variant="outline" type="button" disabled={loading} onClick={handleGitHubLogin} className="w-full hover:bg-accent">
+              <GithubIcon className="mr-2 h-4 w-4" />
+              GitHub
             </Button>
-          </form>
+          </div>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="px-8 text-center text-sm text-muted-foreground">
             Chưa có tài khoản?{" "}
-            <Link href="/register" className="text-arduino-teal hover:underline">
+            <Link href="/register" className="underline underline-offset-4 hover:text-arduino-teal transition-colors">
               Đăng ký ngay
             </Link>
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

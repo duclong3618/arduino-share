@@ -71,13 +71,13 @@ interface Project {
 }
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
-  const map: Record<string, { label: string; variant: any }> = {
-    BEGINNER: { label: "Cơ bản", variant: "beginner" },
-    INTERMEDIATE: { label: "Trung bình", variant: "intermediate" },
-    ADVANCED: { label: "Nâng cao", variant: "advanced" },
+  const map: Record<string, { label: string; colorClass: string }> = {
+    BEGINNER: { label: "Cơ bản", colorClass: "bg-green-500/10 text-green-500 hover:bg-green-500/20" },
+    INTERMEDIATE: { label: "Trung bình", colorClass: "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20" },
+    ADVANCED: { label: "Nâng cao", colorClass: "bg-red-500/10 text-red-500 hover:bg-red-500/20" },
   };
-  const { label, variant } = map[difficulty] || map.BEGINNER;
-  return <Badge variant={variant}>{label}</Badge>;
+  const { label, colorClass } = map[difficulty] || map.BEGINNER;
+  return <Badge variant="secondary" className={`${colorClass} border-transparent text-[10px]`}>{label}</Badge>;
 }
 
 function ProjectsContent() {
@@ -182,32 +182,35 @@ function ProjectsContent() {
         <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
-              <Card key={project.id} className="transition-shadow hover:shadow-md">
+              <Card key={project.id} className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-arduino-teal/5 hover:-translate-y-1 bg-card border-border">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-base leading-tight">
-                      <Link href={`/projects/${project.id}`} className="hover:text-arduino-teal transition-colors">{project.title}</Link>
+                    <CardTitle className="text-base leading-tight line-clamp-1">
+                      <Link href={`/projects/${project.id}`} className="hover:text-arduino-teal transition-colors focus:outline-none">
+                        <span className="absolute inset-0" />
+                        {project.title}
+                      </Link>
                     </CardTitle>
                     <DifficultyBadge difficulty={project.difficulty} />
                   </div>
                   <CardDescription className="line-clamp-2 text-sm">{project.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pb-3">
                   <div className="flex flex-wrap gap-1.5 mb-3">
-                    <Badge variant="outline" className="text-xs"><Code2 className="mr-1 h-3 w-3" />{project.boardType}</Badge>
+                    <Badge variant="outline" className="text-xs bg-background"><Code2 className="mr-1 h-3 w-3" />{project.boardType}</Badge>
                     {project.tags.slice(0, 3).map((pt, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs">{pt.tag.name}</Badge>
+                      <Badge key={i} variant="secondary" className="text-xs bg-secondary/50 hover:bg-secondary">{pt.tag.name}</Badge>
                     ))}
                   </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center gap-3">
-                      <span className="flex items-center gap-1"><Star className="h-3 w-3 text-amber-500" />{project.upvotes}</span>
-                      <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{project.viewCount}</span>
-                      <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" />{project._count.comments}</span>
-                    </div>
-                    <span>{project.user.username}</span>
-                  </div>
                 </CardContent>
+                <div className="px-6 py-3 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs text-muted-foreground mt-auto">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1 text-foreground font-medium"><Star className="h-3 w-3 text-amber-500 fill-amber-500/20" />{project.upvotes}</span>
+                    <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{project.viewCount}</span>
+                    <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" />{project._count.comments}</span>
+                  </div>
+                  <span className="truncate max-w-[100px] font-medium text-foreground">{project.user.username}</span>
+                </div>
               </Card>
             ))}
           </div>
