@@ -52,24 +52,20 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      // On initial sign-in, cache user data into the JWT token
       if (user) {
         token.id = user.id;
+        token.isBanned = (user as any).isBanned ?? false;
+        token.banReason = (user as any).banReason ?? null;
       }
       return token;
     },
     async session({ session, token }) {
+      // Read from cached JWT — no DB query needed
       if (session.user) {
         (session.user as any).id = token.id;
-        // Check if user is banned
-        try {
-          const user = await prismadb.user.findUnique({ where: { id: token.id as string } });
-          if (user?.isBanned) {
-            (session.user as any).isBanned = true;
-            (session.user as any).banReason = user.banReason;
-          } else {
-            (session.user as any).isBanned = false;
-          }
-        } catch {}
+        (session.user as any).isBanned = token.isBanned ?? false;
+        (session.user as any).banReason = token.banReason ?? null;
       }
       return session;
     },

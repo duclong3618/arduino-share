@@ -16,6 +16,8 @@ function createPrismaClient(): PrismaClient {
   return new PrismaClient();
 }
 
-export default globalForPrisma.prisma || createPrismaClient();
+// Proper singleton: reuse client in dev to avoid connection pool leak on hot reload
+const prisma = globalForPrisma.prisma ?? createPrismaClient();
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = globalForPrisma.prisma;
+export default prisma;
